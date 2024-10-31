@@ -2,10 +2,9 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as argon from 'argon2';
 import { PrismaOrmService } from 'src/prisma-orm/prisma-orm.service';
 import { SignInAuthDto, SignUpAuthDto } from './dto';
-
-import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -67,6 +66,7 @@ export class AuthService {
     return this.signToken(user.id, user.email);
   }
 
+  // Generates a signed JSON Web Token (JWT) for user authentication.
   async signToken(
     userId: number,
     email: string,

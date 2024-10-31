@@ -11,29 +11,37 @@ export class UsersService {
       throw new ForbiddenException('All fields are required.');
     }
 
-    const updatedUser = await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...dto,
-      },
-    });
+    try {
+      const updatedUser = await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          ...dto,
+        },
+      });
 
-    delete updatedUser.hash;
-    return updatedUser;
+      delete updatedUser.hash;
+      return updatedUser;
+    } catch (error) {
+      throw new ForbiddenException(
+        'User update failed. Please try again later.',
+      );
+    }
   }
 
   async deleteUser(userId: number) {
-    await this.prisma.user.delete({
-      where: {
-        id: userId,
-      },
-    });
-
-    return {
-      statusCode: 201,
-      message: 'User deleted successfully',
-    };
+    try {
+      await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      throw new ForbiddenException(
+        'User deletion failed. Please try again later.',
+      );
+    }
   }
 }

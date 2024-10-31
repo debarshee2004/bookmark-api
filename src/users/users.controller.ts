@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -22,12 +24,13 @@ export class UsersController {
     return user;
   }
 
-  @Patch('update')
+  @Patch()
   editUser(userId: number, @Body() dto: EditUserDto) {
     return this.userService.editUser(userId, dto);
   }
 
-  @Delete('delete')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete()
   deleteUser(userId: number) {
     return this.userService.deleteUser(userId);
   }

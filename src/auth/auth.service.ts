@@ -16,6 +16,10 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignUpAuthDto) {
+    if (!dto.email || !dto.password || !dto.firstName || !dto.lastName) {
+      throw new ForbiddenException('All fields are required.');
+    }
+
     const hashed_password = await argon.hash(dto.password);
 
     try {
@@ -40,6 +44,10 @@ export class AuthService {
   }
 
   async signin(dto: SignInAuthDto) {
+    if (!dto.email || !dto.password) {
+      throw new ForbiddenException('All fields are required.');
+    }
+
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
